@@ -1,178 +1,135 @@
-# ML Assignment — Plan & Dataset Options
+# ML Assignment — Master Plan (v2)
 
-_Fundamentals of Machine Learning — Programming Assignment (group of 2, 40 marks)._
-_Working summary of decisions, dataset options, and the build plan._
-
----
-
-## 1. What the assignment requires
-
-Apply machine learning (**classical ML only — no deep learning**) to a real,
-publicly-hosted dataset and write it up.
-
-You choose **one** learning paradigm, and the number of algorithms depends on it:
-
-| Paradigm | Algorithms required |
-|----------|--------------------|
-| Supervised | **two** distinct algorithms |
-| Unsupervised / clustering | **two** distinct algorithms |
-| Reinforcement learning | **one** algorithm |
-
-> **Open question to confirm with the lecturer:** whether you pick **one** paradigm
-> (my strong reading of the brief's "supervised, unsupervised _or_ reinforcement")
-> or must apply all three. The scope of the whole project depends on this, and a
-> missing/incorrect component means zero marks, so it is worth a one-line email:
-> _"Do we pick one learning paradigm, or apply all three?"_
-> Supervised is almost certainly part of the answer either way, so building it now
-> is safe.
-
-### Required deliverables (all mandatory — any missing = zero marks)
-- `members.txt` — IDs and emails of both members
-- `submission.txt` — dataset link + GitHub repo link + YouTube demo link
-- **GitHub repo** with detailed commit history **from the start** (they check this)
-- **YouTube video** — each member ≤5 min explaining their contribution
-- **PDF report** — the main marked deliverable (problem, dataset, methodology,
-  results, discussion), comparing the algorithms' accuracy with appropriate metrics
-- **Source code as text in an appendix** of the report (not screenshots)
-- Whole bundle zipped as `ML-assignment.zip`, uploaded by one member
-
-### Watch-outs
-- Turnitin similarity **> 20%** is penalised → all writing must be original.
-- Resubmissions capped at **45%**.
-- Dataset must **not** be a tutorial dataset and must be reasonably complex.
+_Fundamentals of Machine Learning — Programming Assignment · group of 2 · 40 marks._
+_This version replaces the earlier plan (which was built around the Credit Card dataset).
+It reflects the switch to the Gas Sensor dataset, the mandatory PCA + feature-engineering
+instructions, and alignment to the lab sheets and lectures._
 
 ---
 
-## 2. What makes a dataset score well here
-
-- **Not a tutorial dataset** — avoid Iris, Titanic, Wine, Breast-Cancer-Wisconsin, Boston Housing.
-- **Complex enough** — thousands of rows, 15+ mixed-type features.
-- **Class imbalance** — lets you argue why accuracy alone is misleading and bring
-  in precision, recall, F1, ROC-AUC, PR-AUC (the "appropriate metrics" the brief wants).
-- **Some genuine cleaning needed** — undocumented codes, encoding, scaling.
-- **Two algorithms that disagree** — gives a real compare-and-contrast section.
+## 0. Scope — confirmed
+The brief says apply an algorithm "under supervised, unsupervised **or** reinforcement
+learning", and the rubric has **two separate marking tables** (Supervised/Unsupervised,
+and Reinforcement). → You choose **one paradigm**. We are doing **supervised learning**
+with **two distinct algorithms** (team of 2). No unsupervised/RL components are required.
+_(A one-line email to the lecturer remains cheap insurance, but the document is clear.)_
 
 ---
 
-## 3. Recommended dataset options
+## 1. The project
+**Title:** Gas Classification under Sensor Drift — a comparative study of Logistic
+Regression and Random Forest with feature selection and PCA.
 
-All are real, publicly hosted, non-tutorial, CC BY 4.0, and load via `pip install ucimlrepo`.
-
-### Finance
-- **Default of Credit Card Clients** — UCI ID 350 · <https://archive.ics.uci.edu/dataset/350/default+of+credit+card+clients>
-  30,000 clients, 23 features, ~22% default. Real cleaning quirks. **← chosen (top pick).**
-- **Bank Marketing** — UCI ID 222 · <https://archive.ics.uci.edu/dataset/222/bank+marketing>
-  Up to 45,211 records, 16–20 features, predict term-deposit subscription. ~11% "yes" (strong imbalance).
-- **Statlog German Credit** — UCI ID 144 · credit risk, 1,000 rows, 20 features. Has a cost matrix. Small but classic.
-
-### Marketing / e-commerce
-- **Online Shoppers Purchasing Intention** — UCI ID 468 · <https://archive.ics.uci.edu/dataset/468/online+shoppers+purchasing+intention+dataset>
-  12,330 sessions, 18 features, ~15% purchase rate. Clean but needs encoding + scaling.
-
-### Health
-- **Diabetes 130-US Hospitals (1999–2008)** — UCI ID 296 · <https://archive.ics.uci.edu/dataset/296/diabetes+130-us+hospitals+for+years+1999-2008>
-  ~101,766 encounters, ~50 columns, predict 30-day readmission. Most complex option.
-  _Caveat:_ very heavily used by students → higher Turnitin / originality risk; SVM slow on 100k rows.
-
-### Multiclass / high-dimensional (good for showing PCA / dimensionality reduction)
-- **Human Activity Recognition Using Smartphones** — UCI ID 240 · ~10,299 rows, **561 features**, 6 classes. Ideal PCA showcase.
-- **Predict Students' Dropout & Academic Success** — UCI ID 697 · ~4,424 rows, 36 features, 3 classes.
-
-### Quick chooser
-- Cleanest full-marks path → **Credit Card Default** or **Bank Marketing**
-- Maximise preprocessing marks → **Diabetes 130** (mind Turnitin) or **HAR** (PCA)
-- Most original / less picked-over → **Bank Marketing** or **Online Shoppers**
+**Problem:** classify which of **6 gases** a 16-sensor chemical array is detecting from
+its **128 response features** (supervised multiclass classification), then study how
+feature engineering, feature selection, PCA, and sensor drift over time affect accuracy.
 
 ---
 
-## 4. Chosen dataset — Default of Credit Card Clients
-
-- **Source:** UCI Machine Learning Repository, ID 350.
-- **Citation:** Yeh, I. (2009). _Default of Credit Card Clients_. UCI Machine Learning Repository. <https://doi.org/10.24432/C55S3H> (CC BY 4.0).
-- **Task:** binary classification — will a Taiwanese bank client **default next month** (Oct 2005)?
-- **Size:** 30,000 rows × 23 features + 1 target. **~22% default / 78% no-default** (imbalanced). No missing values.
-
-### Feature groups
-| Group | Features |
-|-------|----------|
-| Demographics | `LIMIT_BAL`, `SEX`, `EDUCATION`, `MARRIAGE`, `AGE` |
-| Repayment status | `PAY_1`…`PAY_6` (−1 = paid on time, 1–9 = months late, special codes −2/0) |
-| Bill amounts | `BILL_AMT1`…`BILL_AMT6` |
-| Payment amounts | `PAY_AMT1`…`PAY_AMT6` |
-| **Target** | `default.payment.next.month` (1 = default, 0 = no) |
-
-### Known cleaning quirks (worth marks)
-- `EDUCATION` has undocumented codes 0, 5, 6 → fold into 4 ("others").
-- `MARRIAGE` has undocumented code 0 → fold into 3 ("others").
-- Drop the `ID` column (no predictive value).
+## 2. Dataset
+- **Name:** Gas Sensor Array Drift at Different Concentrations
+- **Source:** UCI ML Repository, **ID 270** — <https://archive.ics.uci.edu/dataset/270/gas+sensor+array+drift+at+different+concentrations>
+- **Citation:** Vergara, A. et al. (2012). *Gas Sensor Array Drift Dataset at Different Concentrations.* UCI ML Repository. https://doi.org/10.24432/C5MK6M (CC BY 4.0)
+- **Size:** 13,910 measurements × 128 continuous features
+- **Target:** 6 gases — Ethanol, Ethylene, Ammonia, Acetaldehyde, Acetone, Toluene (mild imbalance 1,641–3,009)
+- **Structure:** 16 sensors × 8 features each; 10 acquisition **batches** over 36 months (basis of the drift study)
+- **Quality:** no missing values; features span ~6 orders of magnitude → standardisation essential
+- _Loading:_ notebook cites UCI 270 and loads a byte-identical public CSV mirror for one-line reproducibility.
 
 ---
 
-## 5. Detailed plan
-
-### Learning paradigm & algorithms
-- **Supervised — binary classification.**
-- **Two distinct algorithms, one per member:**
-  - **Member A → Logistic Regression** (interpretable linear baseline; scaled features)
-  - **Member B → Random Forest** (non-linear tree ensemble; scale-invariant)
-- Both use `class_weight='balanced'` to handle the 78/22 imbalance.
-
-### Preprocessing
-1. Drop `ID`.
-2. Fold undocumented `EDUCATION` / `MARRIAGE` codes into "others".
-3. One-hot encode nominal features (`SEX`, `EDUCATION`, `MARRIAGE`); keep `PAY_*` as ordinal numeric.
-4. Standard-scale numeric features for Logistic Regression (Random Forest gets unscaled).
-5. Stratified 80/20 train/test split (preserves default rate).
-
-### Evaluation metrics (the compare-and-contrast core)
-- Accuracy, **Precision, Recall, F1**, **ROC-AUC**, **PR-AUC**
-- Confusion matrices, ROC & PR curves
-- 5-fold stratified cross-validation (ROC-AUC)
-- Narrative: **why accuracy alone misleads** on imbalanced data.
-
-### Results already computed (real, from the actual data)
-| Metric | Logistic Regression | Random Forest |
-|--------|--------------------:|--------------:|
-| Accuracy | 0.679 | **0.803** |
-| Precision | 0.368 | **0.560** |
-| Recall | **0.631** | 0.516 |
-| F1 | 0.465 | **0.537** |
-| ROC-AUC | 0.710 | **0.771** |
-| PR-AUC | 0.491 | **0.551** |
-| CV ROC-AUC | 0.728 ± 0.011 | **0.781 ± 0.004** |
-
-**Interpretation:** Random Forest is the stronger overall ranker (higher AUC/PR-AUC);
-Logistic Regression (balanced) catches more true defaulters (higher recall) but with
-many more false alarms → the "better" model depends on the bank's cost trade-off.
-
-### Discussion / future work (report section)
-- Threshold tuning on the PR curve to a business recall target.
-- Hyper-parameter search (`GridSearchCV` / `RandomizedSearchCV`).
-- SMOTE / undersampling as an alternative to class weights.
-- Feature engineering (credit utilisation `BILL_AMT/LIMIT_BAL`, delinquency counts).
-- Try Gradient Boosting as a stronger classical model.
-- Limitations: single bank / 2005 / Taiwan; ambiguous repayment codes; fairness of demographic features.
+## 3. Algorithms (one per member)
+- **Member A → Logistic Regression** (linear, interpretable baseline) — Lab 05
+- **Member B → Random Forest** (non-linear ensemble) — Lab 06
+- **Justification:** a six-model screen (LR, KNN, Decision Tree, RF, Naive Bayes, SVM —
+  Labs 05–09) shows *why* these two are the chosen distinct pair, without adding required
+  deliverables. Naive Bayes fails (correlated features violate its independence assumption);
+  KNN scores high on a random split but is non-interpretable and drift-fragile.
 
 ---
 
-## 6. Deliverables split
+## 4. Method, aligned to the lab sheets
+**Preprocessing (Lab 02 — Data Preprocessing, Feature Engineering & Feature Selection)**
+- Data audit (dtypes, missing %, duplicates, class & batch balance, scale range)
+- Skew handling via signed-log transform; StandardScaler (MinMax vs Standard discussed), fit on train only (no leakage)
+- **Feature engineering:** per-sensor aggregates (mean/range), **cross-sensor ratios** (drift-robust), signed-log features
+- **Feature selection:** correlation redundancy + **ANOVA F-test** (`f_classif`) + **Mutual Information** (`mutual_info_classif`); Chi-square skipped (no categoricals) — with the Lab-02 caveat that *statistical significance ≠ predictive usefulness*
 
-### What I (Claude) am producing
-1. **Jupyter notebook** — clean, fully commented, real embedded outputs. _(built)_
-2. **PDF report** — mapped to every rubric line, with source code as a text appendix. _(next)_
-3. **`members.txt`** and **`submission.txt`** templates.
+**Dimensionality reduction (Lab 11 — PCA)**
+- Standardise → PCA; cumulative explained-variance curve; components for 95% variance (~13)
+- 2-component scatter; component sweep `[2,5,8,10,15,20,25,30]` with 5-fold stratified CV
+- "How many components" analysis: accuracy vs dimensionality
 
-### What only the team can do
-- YouTube demo video (≤5 min each).
-- The real GitHub commit history — **build it up gradually from the start**, they verify it.
-- The viva — be ready to defend every choice.
-- Fill in names, IDs, emails, and each member's individual-contribution statement.
+**Modelling & evaluation (Labs 05/06/08)**
+- Pipelines with StandardScaler; `class_weight` for imbalance
+- Compare LR & RF across representations: all-128 / engineered / selected / PCA
+- Metrics: accuracy, macro precision/recall/F1, balanced accuracy, one-vs-rest ROC-AUC, confusion matrices, `classification_report`
+- 5-fold stratified cross-validation
+- **GridSearchCV** hyper-parameter tuning (Lab 08) — the "how we obtain higher accuracy" story
+- Interpretability: RF feature importances + LR coefficients (two lenses)
+
+**Key experiment — sensor drift**
+- Train on early batches, test on later ones (multiple configs for robustness)
+- Per-batch degradation curve; train-vs-test gap as evidence of overfitting
 
 ---
 
-## 7. Immediate next steps
-1. **Confirm scope with the lecturer** (one paradigm vs. all three).
-2. Finish + run the notebook (real outputs). _(in progress)_
-3. Generate the PDF report with figures + code appendix.
-4. Create the GitHub repo early and commit in small, meaningful steps.
-5. Record the demo video; assemble the `ML-assignment.zip` bundle.
+## 5. Results so far (real, from the data)
+| Setting | Logistic Regression | Random Forest |
+|---|---:|---:|
+| All 128 features (test acc) | 0.990 | 0.995 |
+| Correlation-filtered (58 feats) | 0.984 | 0.995 |
+| PCA-95% (13 components) | 0.926 | 0.992 |
+| CV macro-F1 (PCA-13) | 0.919 ± 0.005 | 0.990 ± 0.002 |
+| **Drift (train 1–5, test 6–10)** | **0.764** | 0.620 |
+
+**Headline findings**
+- PCA compresses 128 → ~13 components (95% variance) with RF holding ~0.99 accuracy.
+- On a random split RF wins; **under sensor drift the ranking reverses** — the simpler
+  Logistic Regression generalises better, because RF overfits the training batches'
+  sensor characteristics. This is the top-marks critical-analysis centrepiece.
+
+---
+
+## 6. Deliverables
+**Mandatory (any missing = zero marks)**
+- `members.txt` — both members' IDs + emails
+- `submission.txt` — dataset link (UCI 270) + GitHub repo link + YouTube link
+- GitHub repo with **detailed commit history from inception**
+- YouTube video (each member ≤5 min)
+- **PDF report** (main marked item) — problem, dataset, methodology, results, discussion (limitations/future work), comparing algorithms' accuracy with appropriate metrics
+- **All source code as text in the report appendix** (not screenshots)
+- Bundle zipped as `ML-assignment.zip`; one member uploads
+- Turnitin similarity < 20%
+
+**Recommended**
+- Proper repo README (replace the current one-line file; update dataset link to UCI 270)
+- Viva study guide
+
+**Only the team can do:** the video, the real commit history, the viva, and names/IDs/emails + each member's individual-contribution statement.
+
+---
+
+## 7. Status & next steps
+**Done:** dataset verified; full analysis + executed notebook (`Gas_Sensor_Drift_ML.ipynb`) with 8 figures.
+
+**In progress — notebook upgrades:**
+1. Feature engineering + feature selection (Lab-02 aligned)
+2. Robust drift protocol (multiple train/test configs)
+3. Train-vs-test gap (evidence RF overfits)
+4. GridSearchCV hyper-parameter tuning
+5. LR coefficient interpretability
+6. Load from official UCI source (with mirror fallback)
+
+**Then:** PDF report → `members.txt`/`submission.txt`/README → viva guide → zip.
+
+**Flags to fix:** the old `README.md` and `ML_Assignment_Plan.md` still reference the
+previous dataset (UCI 350) — update both to Gas Sensor (UCI 270).
+
+---
+
+## 8. Resources on hand
+- **Assignment brief** + **marking rubric** (read in full)
+- **Lectures:** 1 (Intro), 2 (Preprocessing/FE/FS), 3 (Linear Regression), 4 (LogReg/kNN), 5 (Decision Trees/RF), 6 (SVM), 7 (tbc), 9 (Unsupervised), Bayesian, RL
+- **Lab sheets:** Lab 02 (preprocessing/FE/FS), 04, 05 (LogReg/KNN), 06 (DT/RF/ensembles), 07 (SVM), 08 (evaluation/imbalance/GridSearch), Bayesian, 10 (clustering), 11 (PCA)
+- Most relevant and already mirrored in the notebook: **Lab 02** (preprocessing) and **Lab 11** (PCA); evaluation conventions from **Lab 08**.
