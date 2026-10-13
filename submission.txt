@@ -1,0 +1,13 @@
+Fundamentals of Machine Learning - Programming Assignment
+Submission Links
+=========================================================
+
+Dataset link:
+  Gas Sensor Array Drift at Different Concentrations (UCI ML Repository, ID 270)
+  https://archive.ics.uci.edu/dataset/270/gas+sensor+array+drift+at+different+concentrations
+
+GitHub repository (with full commit history from inception):
+  <paste your public GitHub repo URL here>
+
+YouTube presentation / demo (each member max 5 minutes):
+  <paste your public/unlisted YouTube video URL here>
