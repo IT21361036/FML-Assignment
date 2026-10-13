@@ -36,6 +36,15 @@ feature engineering, feature selection, PCA, and sensor drift over time affect a
 - **Quality:** no missing values; features span ~6 orders of magnitude → standardisation essential
 - _Loading:_ notebook cites UCI 270 and loads a byte-identical public CSV mirror for one-line reproducibility.
 
+### Why we chose this dataset (rubric criterion 1)
+- **Not a tutorial dataset.** It is a genuine research dataset (UC San Diego), unlike Iris/Titanic/Wine, directly satisfying the "should not be part of a tutorial" requirement.
+- **Complex enough.** 13,910 samples × **128 continuous features** and 6 classes give real analytical depth, well beyond a toy problem.
+- **PCA has genuine value.** With 128 correlated features, dimensionality reduction is a real investigation, not a box-tick — this was mandatory (sir) and maps onto the rubric's "dimensionality reduction".
+- **Supports a strong metric story.** Multiclass with mild imbalance justifies macro-F1 / balanced accuracy beyond plain accuracy — the "appropriate metrics" the brief asks for.
+- **Enables a standout experiment.** The 10 acquisition batches over 36 months let us study **sensor drift** (train early, test later) — a real-world generalisation question most submissions won't have, powering the critical-analysis criterion.
+- **Clean but realistic.** No missing values, yet wildly different feature scales → a clear, defensible preprocessing/standardisation rationale.
+- **Publicly hosted and citable** (UCI, CC BY 4.0) — satisfies the "hosted somewhere" and citation requirements.
+
 ---
 
 ## 3. Algorithms (one per member)
