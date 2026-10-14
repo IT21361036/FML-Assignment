@@ -7,7 +7,7 @@ Dataset link:
   https://archive.ics.uci.edu/dataset/270/gas+sensor+array+drift+at+different+concentrations
 
 GitHub repository (with full commit history from inception):
-  <paste your public GitHub repo URL here>
+  https://github.com/IT21361036/ML-Assignment.git
 
 YouTube presentation / demo (each member max 5 minutes):
   <paste your public/unlisted YouTube video URL here>
