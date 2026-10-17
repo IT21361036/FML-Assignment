@@ -6,10 +6,8 @@ Member 1
   Name  : Saara M.K.F
   ID    : MS26923024
   Email : ms26923024@my.sliit.lk
-  Role  : Random Forest track, PCA & drift experiments
 
 Member 2
   Name  : Dhanushikan V.
   ID    : MS26924250
   Email : ms26924250@my.sliit.lk
-  Role  : Logistic Regression track, data cleaning & EDA
