@@ -49,11 +49,11 @@ present - and test how reliably the models perform on later acquisition batches.
 ## Repository structure
 ```
 .
-├── FML_Assignment.ipynb     # main analysis notebook (run top-to-bottom)
-├── ML-assignment.pdf        # final report
-├── members.txt              # group members (IDs + emails)
-├── submission.txt           # dataset / repo / video links
-├── data/                    # (optional) batch1.dat ... batch10.dat for offline runs
+├── FML_Assignment.ipynb         # main analysis notebook (run top-to-bottom)
+├── FML_Assignment_Report.pdf    # final report
+├── members.txt                  # group members (IDs, emails, roles)
+├── submission.txt               # dataset / repo / video links
+├── data/                        # (optional) batch1.dat ... batch10.dat for offline runs
 └── README.md
 ```
 
